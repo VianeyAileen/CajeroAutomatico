@@ -7,20 +7,51 @@
     <title>Document</title>
 
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/home.css">
 </head>
 <body>
     
-    <div class="container">
-        <div class="login">
-            <h1>Ingresa a tu cuenta</h1>
-            <input id="username" type="text" placeholder="usuario">
-            <button id="btn_continuar">Continuar</button>
-        </div>  
-        
-        <div class="informacion">
+    <!-- Vista de login -->
+    <div id="view_login">
+        <div class="container">
+            <div id="login">
+                <h1>Ingresa a tu cuenta</h1>
+                <input id="username" type="text" placeholder="usuario">
+                <input id="password" type="password" placeholder="contraseña">
+                <button id="btn_continuar">Continuar</button>
+            </div>  
             
+            <div class="informacion">
+                
+            </div>
         </div>
     </div>
+
+    <!-- Vista home -->
+    <div id="home">
+        <div class="salir">
+            <button>Salir</button>
+        </div>
+    
+        
+        <div class="container_home">
+            <div class="info">
+                <h1>Bienvenido</h1>
+                <h3>Selecciona una opción</h3>
+            </div>
+    
+            <div class="btn_group">
+                <button id="btn_consulta">Consultar Saldo</button>
+                <button id="btn_ingresa">Ingresar Monto</button>
+                <button id="btn_retira">Retirar</button>
+            </div>
+        </div>
+    </div>
+
     <script src="../main.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>
+
+
+

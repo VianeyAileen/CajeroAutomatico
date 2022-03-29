@@ -1,79 +1,121 @@
 var cuentas = [
     { nombre: "Hiromi", saldo: 200, password: 'helloworld' },
     { nombre: "Manuel", saldo: 290, password: 'l33t' },
-    { nombre: "Luis", saldo: 67, password: '123' }
+    { nombre: "1", saldo: 67, password: '1' }
   ];
 
 var user = document.getElementById('username')
 var password = document.getElementById('password')
 var continuar = document.getElementById('btn_continuar')
+var vistaHome = document.getElementById("home");
+var vistaLogin = document.getElementById("login");
+var btnConsulta = document.getElementById('btn_consulta')
+var btnIngresa = document.getElementById('btn_ingresa')
+var btnRetira = document.getElementById('btn_retira')
 
-continuar.addEventListener('click', validarUser);
-password.addEventListener('click', validarPassword);
+
+var usuarioSeleccionado;
+
+continuar.addEventListener('click', validarUsuario);
+continuar.addEventListener('click', pruebaValidarC);
+btnConsulta.addEventListener('click', consulta);
+btnIngresa.addEventListener('click', ingresa);
+
 
 function validarUsuario() {
     switch (user.value) {
         case 'Hiromi':
-                window.location.href = '../vistas/password.html';
+                usuarioSeleccionado = user.value;
+                pruebaValidarC   
             break;
 
         case 'Manuel':
-            window.location.href = '../vistas/password.html';
+            usuarioSeleccionado = user.value;
+            pruebaValidarC  
             break;
 
-        case 'Luis':
-            location.href = '../vistas/password.html';
+        case '1':
+            usuarioSeleccionado = user.value;
+            pruebaValidarC  
             break;
     
         default:
             console.log('El usuario no existe')
             break;
     }
+}    
+
+function pruebaValidarC()
+{
+    
+    for(var i=0; i<cuentas.length; i++){
+        if(cuentas[i].nombre === usuarioSeleccionado){
+            if(cuentas[i].password === password.value){
+                //window.location.href =  '../vistas/home.html';   
+                vistaHome.style.display = "block";
+                vistaLogin.style.display = "none";
+
+            }else{
+                console.log("Contraseña incorrecta");
+                password.value = '';
+                password.focus();
+            }
+            
+        }
+        
+    }
 }
 
-// Hiromi
-// function validarContrasena() {
-//     cuentas.forEach(function (cuenta) {
-//         if (password.value === cuenta.password) {
-            
-//         }
-        
-//     });
-
-
-
-//Jonathan
-    var usuarioElegido;
-    function validarUser(){
-        cuentas.forEach(function(cuenta){
-            if(cuenta.nombre === user.value){
-               usuarioElegido = cuenta;
-               window.location.href =  '../vistas/password.html';
-            }
-        });
-    }
-
-    function validarPassword(){
-        if(usuarioElegido.password == password.value){
-            window.location.href =  '../vistas/home.html';
-        }
-    }
-
-
-/////Omar
-
-    function pruebaValidarC()
-    {
-        
+function consulta(){
+        var saldo;
         for(var i=0; i<cuentas.length; i++){
-            if(cuentas[i].nombre === user.value){
-                if(cuentas[i].password === password.value){
-                    window.location.href =  '../vistas/home.html';   
-                }
+            if(cuentas[i].nombre === usuarioSeleccionado){
+              // usuario = i;
+               saldo = cuentas[i].saldo;
+                
             }
             
         }
-    }
-    
+        Swal.fire({
+            icon: 'info',
+            title: 'Tu saldo actual es:',
+            text: '$' + saldo + '.00 MXN',
+        })
+}
 
-    
+function ingresa() {
+    var saldoIngresado = 0;
+    var saldoIngresadoo = 0;
+    for(var i=0; i<cuentas.length; i++){
+        if(cuentas[i].nombre === usuarioSeleccionado){
+            const { value: saldo } = Swal.fire({
+                title: 'Ingresa el monto',
+                input: 'text',
+                inputPlaceholder: 'Monto'
+            })   
+
+            console.log({value:saldo})
+            saldoIngresado = saldo;
+            saldoIngresadoo = parseFloat(saldoIngresado)
+            console.log(saldoIngresadoo)
+
+
+
+            
+            if(saldo){
+                console.log(saldo)
+                cuentas[i].saldo+=saldoIngresado;
+                Swal.fire(`Saldo actual: ${saldo}`)
+            }
+        }            
+    }
+}
+
+/*
+console.log('entre')
+            var saldoNuevo = saldo
+            saldoIngresado = parseFloat(saldoNuevo)
+            console.log(saldo)
+            cuentas[i].saldo+=saldoIngresado;
+            Swal.fire(`Saldo actual: ${saldo}`)
+*/
