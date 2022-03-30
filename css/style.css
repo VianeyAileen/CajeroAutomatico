@@ -17,12 +17,13 @@
     display: flex;
     align-self: center;
     width: 260px;
+    margin-bottom: 10px;
 }
 
 #btn_continuar{
     display: flex;
     align-self: flex-end;
-    margin-top: 20px;
+    margin-top: 10px;
     margin-right: 60px;
     width: 90px;
 }

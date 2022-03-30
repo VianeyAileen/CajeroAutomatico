@@ -1,7 +1,7 @@
 .salir{
     display: flex;
     justify-content: flex-end;
-    margin-right: 96px;
+    margin-right: 40px;
 }
 
 .container_home{
@@ -17,7 +17,6 @@
 }
 
 .btn_group{
-
     display: flex;
     justify-content: space-around;
 }
