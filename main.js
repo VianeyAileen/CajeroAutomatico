@@ -1,7 +1,7 @@
 var cuentas = [
     { nombre: "Hiromi", saldo: 200, password: 'helloworld' },
     { nombre: "Manuel", saldo: 290, password: 'l33t' },
-    { nombre: "1", saldo: 67, password: '1' }
+    { nombre: "Luis", saldo: 67, password: '123' }
 ];
 
 var user = document.getElementById('username')
@@ -13,6 +13,8 @@ var btnConsulta = document.getElementById('btn_consulta')
 var btnIngresa = document.getElementById('btn_ingresa')
 var btnRetira = document.getElementById('btn_retira')
 var btnSalir = document.getElementById('btn_salir')
+var error = document.getElementById('error')
+var bienvenida = document.getElementById('bienvenida')
 
 
 var usuarioSeleccionado;
@@ -39,49 +41,48 @@ function validarUsuario() {
             pruebaValidarC
             break;
 
-        case '1':
+        case 'Luis':
             usuarioSeleccionado = user.value;
             pruebaValidarC
             break;
 
         default:
-            console.log('El usuario no existe')
+            error.innerHTML = 'Usuario incorrecto'
+            user.value = '';
+            password.value = ''
+            user.focus();
             break;
     }
 }
 
 function pruebaValidarC() {
-
     for (var i = 0; i < cuentas.length; i++) {
         if (cuentas[i].nombre === usuarioSeleccionado) {
             if (cuentas[i].password === password.value) {
-                //window.location.href =  '../vistas/home.html';   
                 vistaHome.style.display = "block";
                 vistaLogin.style.display = "none";
+                bienvenida.innerHTML = 'Bienvenido @' + cuentas[i].nombre
 
             } else {
-                console.log("Contraseña incorrecta");
+                error.innerHTML = 'Contraseña no encontrada'
                 password.value = '';
-                password.focus();
+                user.value = '';
             }
-
         }
-
     }
 }
 
 function salir() {
-    window.location.href = '../vistas/user.html';
-    // user.value = '';
-    // user.focus();
-    // password.value = '';
+    vistaHome.style.display = "none";
+    vistaLogin.style.display = "block";
+    user.value = '';
+    user.focus();
+    password.value = '';
 }
 
 function consulta() {
-    var saldo;
     for (var i = 0; i < cuentas.length; i++) {
         if (cuentas[i].nombre === usuarioSeleccionado) {
-            //    saldo = cuentas[i].saldo;  
             if (globalTotal == 0) {
                 Swal.fire({
                     icon: 'info',
@@ -108,52 +109,48 @@ function ingresa() {
     for (var i = 0; i < cuentas.length; i++) {
         if (cuentas[i].nombre === usuarioSeleccionado) {
             var saldoActual = cuentas[i].saldo
-            // var nuevoSaldo = 0
             Swal.fire({
                 title: "Ingresa un monto",
                 input: 'text',
+                showDenyButton: true,
+                confirmButtonText: 'Aceptar',
+                denyButtonText: 'Cancelar',
             }).then((result) => {
-                saldoIngresado = result.value
-                saldoIngresado = parseFloat(saldoIngresado)
-                if(globalTotal == 0){
-                    reglaTotales =  saldoActual + saldoIngresado
-                }else{
-                    reglaTotales = globalTotal + saldoIngresado
-                }
-                
-                if( reglaTotales > 990){
-                    Swal.fire({
-                            icon: 'warning',
-                            title:'Aviso',
-                            text: 'Al ingresar esa cantidad rebasa el limite',
-                        })
-                }else{
-                    globalTotal = saldoActual += saldoIngresado
-                    
-                    if (saldoIngresado) {
-                        Swal.fire({
-                            title: 'Saldo ingresado?',
-                            text: '$' + saldoIngresado + '.00 MXN',
-                            icon: 'info',
-                            confirmButtonColor: '#3085d6',
-                            confirmButtonText: 'Okay'
-                          }).then((result) => {
-                            if (result.isConfirmed) {
-                                consulta()
-                            }
-                        })                      
-
-                        // Swal.fire({
-                        //     title:'Tu monto actual es',
-                        //     text: '$' + globalTotal + '.00 MXN',
-                        // }).then(() =>{
-                        //     nuevoSaldo = globalTotal
-                        //     console.log('segunda promesa, ' + nuevoSaldo)
-
-                        // });
-
+                if(result.isConfirmed){
+                    saldoIngresado = result.value
+                    saldoIngresado = parseFloat(saldoIngresado)
+                    if(globalTotal == 0){
+                        reglaTotales =  saldoActual + saldoIngresado
+                    }else{
+                        reglaTotales = globalTotal + saldoIngresado
                     }
-                }
+                    
+                    if( reglaTotales > 990){
+                        Swal.fire({
+                                icon: 'warning',
+                                title:'Aviso',
+                                text: 'Al ingresar esa cantidad rebasa el limite',
+                            })
+                    }else{
+                        globalTotal = saldoActual += saldoIngresado
+                        
+                        if (saldoIngresado) {
+                            Swal.fire({
+                                title: 'Saldo ingresado',
+                                text: '$' + saldoIngresado + '.00 MXN',
+                                icon: 'info',
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'Okay',
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    consulta()
+                                }
+                            })                      
+                        }
+                    }
+                }else if(result.isDenied){
+                    
+                }               
                 
             });
 
@@ -170,39 +167,46 @@ function retira() {
             Swal.fire({
                 title: "¿Qué cantidad desea retirar?",
                 input: 'text',
+                showDenyButton: true,
+                confirmButtonText: 'Aceptar',
+                denyButtonText: 'Cancelar',
             }).then((result) => {
-                saldoIngresado = result.value
-                saldoIngresado = parseFloat(saldoIngresado)
+                if (result.isConfirmed) {
+                    saldoIngresado = result.value
+                    saldoIngresado = parseFloat(saldoIngresado)
 
-                if(globalTotal == 0){
-                    reglaTotales =  saldoActual - saldoIngresado
-                }else{
-                    reglaTotales = globalTotal - saldoIngresado
-                }
-
-                if (reglaTotales < 10) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title:'Aviso',
-                        text: 'No puedes tener menos de $10.00 MXN en tu cuenta',
-                    })
-                } else {
-                    globalTotal = saldoActual -= saldoIngresado
-
-                    if (saldoIngresado) {
-                        Swal.fire({
-                            title: 'Monto a retirar',
-                            text: '$' + saldoIngresado + '.00 MXN',
-                            icon: 'info',
-                            confirmButtonColor: '#3085d6',
-                            confirmButtonText: 'Okay'
-                          }).then((result) => {
-                            if (result.isConfirmed) {
-                                consulta()
-                            }
-                        }) 
-
+                    if(globalTotal == 0){
+                        reglaTotales =  saldoActual - saldoIngresado
+                    }else{
+                        reglaTotales = globalTotal - saldoIngresado
                     }
+
+                    if (reglaTotales < 10) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title:'Aviso',
+                            text: 'No puedes tener menos de $10.00 MXN en tu cuenta',
+                        })
+                    } else {
+                        globalTotal = saldoActual -= saldoIngresado
+
+                        if (saldoIngresado) {
+                            Swal.fire({
+                                title: 'Monto a retirar',
+                                text: '$' + saldoIngresado + '.00 MXN',
+                                icon: 'info',
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    consulta()
+                                }
+                            }) 
+
+                        }
+                    }
+                } else if(result.isDenied) {
+                    
                 }
             });
 
